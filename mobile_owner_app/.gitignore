@@ -1,0 +1,10 @@
+.dart_tool/
+.packages
+.pub/
+build/
+android/.gradle/
+android/local.properties
+android/app/google-services.json
+lib/firebase_options.dart
+*.jks
+*.keystore

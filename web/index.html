@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#07111f">
+
+    <meta
+        name="description"
+        content="RFID Rickshaw Management System - Smart Rickshaw Identification and Live Monitoring"
+    >
+
+    <title>RFID Rickshaw Management System</title>
+
+    <style>
+
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Inter,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            color: #f8fafc;
+
+            background:
+                radial-gradient(
+                    circle at 10% 10%,
+                    rgba(14, 165, 233, 0.18),
+                    transparent 28%
+                ),
+
+                radial-gradient(
+                    circle at 90% 20%,
+                    rgba(20, 184, 166, 0.14),
+                    transparent 25%
+                ),
+
+                radial-gradient(
+                    circle at 50% 100%,
+                    rgba(37, 99, 235, 0.14),
+                    transparent 35%
+                ),
+
+                #020617;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =========================================================
+           BACKGROUND
+        ========================================================= */
+
+        body::before {
+            content: "";
+
+            position: fixed;
+            inset: 0;
+
+            pointer-events: none;
+
+            opacity: 0.08;
+
+            background-image:
+                linear-gradient(
+                    rgba(255,255,255,0.15) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.15) 1px,
+                    transparent 1px
+                );
+
+            background-size: 55px 55px;
+        }
+
+
+        /* =========================================================
+           NAVBAR
+        ========================================================= */
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            background:
+                rgba(2,6,23,0.78);
+
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .navbar-inner {
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                15px 24px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+        }
+
+
+        /* =========================================================
+           BRAND
+        ========================================================= */
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            font-size: 25px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0ea5e9,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 10px 30px
+                rgba(14,165,233,0.25);
+        }
+
+        .brand-name {
+            font-size: 16px;
+            font-weight: 800;
+
+            letter-spacing: -0.2px;
+        }
+
+        .brand-subtitle {
+            margin-top: 3px;
+
+            color: #64748b;
+
+            font-size: 10px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 1px;
+        }
+
+
+        /* =========================================================
+           SYSTEM STATUS
+        ========================================================= */
+
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            padding:
+                8px 13px;
+
+            border-radius: 30px;
+
+            color: #86efac;
+
+            font-size: 12px;
+            font-weight: 600;
+
+            background:
+                rgba(34,197,94,0.07);
+
+            border:
+                1px solid
+                rgba(34,197,94,0.16);
+        }
+
+        .system-dot {
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+                0 0 14px
+                rgba(34,197,94,0.8);
+
+            animation:
+                systemPulse 2s infinite;
+        }
+
+        @keyframes systemPulse {
+
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.45;
+                transform: scale(0.75);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+
+        /* =========================================================
+           HERO
+        ========================================================= */
+
+        .hero {
+            position: relative;
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            min-height:
+                calc(100vh - 77px);
+
+            padding:
+                80px 24px 70px;
+
+            display: grid;
+
+            grid-template-columns:
+                1.05fr 0.95fr;
+
+            align-items: center;
+
+            gap: 70px;
+        }
+
+
+        /* =========================================================
+           HERO LEFT
+        ========================================================= */
+
+        .hero-content {
+            max-width: 680px;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            padding:
+                8px 13px;
+
+            margin-bottom: 22px;
+
+            border-radius: 30px;
+
+            color: #7dd3fc;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+
+            background:
+                rgba(14,165,233,0.08);
+
+            border:
+                1px solid
+                rgba(14,165,233,0.18);
+        }
+
+        .eyebrow-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #38bdf8;
+
+            box-shadow:
+                0 0 10px
+                rgba(56,189,248,0.8);
+        }
+
+        .hero h1 {
+            font-size:
+                clamp(42px, 6vw, 72px);
+
+            line-height: 1.02;
+
+            letter-spacing: -3px;
+
+            font-weight: 850;
+
+            margin-bottom: 25px;
+        }
+
+        .gradient-text {
+            background:
+                linear-gradient(
+                    90deg,
+                    #38bdf8,
+                    #2dd4bf,
+                    #60a5fa
+                );
+
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            color: transparent;
+        }
+
+        .hero-description {
+            max-width: 620px;
+
+            color: #94a3b8;
+
+            font-size: 17px;
+
+            line-height: 1.8;
+
+            margin-bottom: 32px;
+        }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .buttons {
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 12px;
+        }
+
+        .button {
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 10px;
+
+            padding:
+                14px 20px;
+
+            border-radius: 12px;
+
+            text-decoration: none;
+
+            font-size: 13px;
+
+            font-weight: 750;
+
+            transition:
+                0.25s ease;
+        }
+
+        .primary-button {
+            color: white;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #0ea5e9,
+                    #2563eb
+                );
+
+            box-shadow:
+                0 12px 35px
+                rgba(37,99,235,0.28);
+        }
+
+        .primary-button:hover {
+            transform:
+                translateY(-3px);
+
+            box-shadow:
+                0 18px 45px
+                rgba(37,99,235,0.38);
+        }
+
+        .secondary-button {
+            color: #cbd5e1;
+
+            background:
+                rgba(255,255,255,0.045);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+        .secondary-button:hover {
+            transform:
+                translateY(-3px);
+
+            background:
+                rgba(255,255,255,0.08);
+        }
+
+
+        /* =========================================================
+           DASHBOARD PREVIEW
+        ========================================================= */
+
+        .preview-wrapper {
+            position: relative;
+        }
+
+        .preview-glow {
+            position: absolute;
+
+            width: 280px;
+            height: 280px;
+
+            top: 50%;
+            left: 50%;
+
+            transform:
+                translate(-50%, -50%);
+
+            background:
+                rgba(14,165,233,0.16);
+
+            filter: blur(80px);
+
+            pointer-events: none;
+        }
+
+        .dashboard {
+            position: relative;
+            z-index: 2;
+
+            padding: 20px;
+
+            border-radius: 25px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.09),
+                    rgba(255,255,255,0.035)
+                );
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            box-shadow:
+                0 35px 100px
+                rgba(0,0,0,0.45);
+
+            backdrop-filter:
+                blur(20px);
+        }
+
+        .dashboard-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content:
+                space-between;
+
+            margin-bottom: 17px;
+        }
+
+        .dashboard-title {
+            font-size: 13px;
+
+            font-weight: 750;
+
+            color: #e2e8f0;
+        }
+
+        .live-label {
+            display: flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            color: #86efac;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            letter-spacing: 0.8px;
+
+            text-transform: uppercase;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+
+            border-radius: 50%;
+
+            background: #22c55e;
+
+            box-shadow:
+                0 0 10px
+                rgba(34,197,94,0.8);
+        }
+
+
+        /* =========================================================
+           VEHICLE PREVIEW
+        ========================================================= */
+
+        .vehicle {
+            padding: 20px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(2,6,23,0.58);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.08);
+
+            margin-bottom: 12px;
+        }
+
+        .vehicle-header {
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            margin-bottom: 18px;
+        }
+
+        .vehicle-icon {
+            width: 50px;
+            height: 50px;
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 14px;
+
+            font-size: 26px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(14,165,233,0.17),
+                    rgba(37,99,235,0.1)
+                );
+
+            border:
+                1px solid
+                rgba(56,189,248,0.16);
+        }
+
+        .vehicle-main {
+            flex: 1;
+        }
+
+        .vehicle-label {
+            display: block;
+
+            margin-bottom: 4px;
+
+            color: #64748b;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+        }
+
+        .vehicle-number {
+            color: #f8fafc;
+
+            font-size: 18px;
+
+            font-weight: 800;
+        }
+
+        .active-badge {
+            padding:
+                6px 10px;
+
+            border-radius: 20px;
+
+            color: #86efac;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            background:
+                rgba(34,197,94,0.09);
+
+            border:
+                1px solid
+                rgba(34,197,94,0.17);
+        }
+
+
+        /* =========================================================
+           INFO GRID
+        ========================================================= */
+
+        .info-grid {
+            display: grid;
+
+            grid-template-columns:
+                1fr 1fr;
+
+            gap: 9px;
+        }
+
+        .info-box {
+            padding: 13px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.035);
+        }
+
+        .info-label {
+            display: block;
+
+            color: #64748b;
+
+            font-size: 9px;
+
+            font-weight: 700;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.7px;
+
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #cbd5e1;
+
+            font-size: 12px;
+
+            font-weight: 650;
+        }
+
+
+        /* =========================================================
+           FEATURES
+        ========================================================= */
+
+        .features {
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding:
+                40px 24px 90px;
+        }
+
+        .section-heading {
+            text-align: center;
+
+            margin-bottom: 32px;
+        }
+
+        .section-heading h2 {
+            font-size: 30px;
+
+            margin-bottom: 8px;
+
+            letter-spacing: -0.7px;
+        }
+
+        .section-heading p {
+            color: #64748b;
+
+            font-size: 14px;
+        }
+
+        .feature-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 16px;
+        }
+
+        .feature {
+            padding: 25px;
+
+            border-radius: 18px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.07);
+
+            transition:
+                0.25s ease;
+        }
+
+        .feature:hover {
+            transform:
+                translateY(-5px);
+
+            background:
+                rgba(255,255,255,0.06);
+
+            border-color:
+                rgba(56,189,248,0.16);
+        }
+
+        .feature-icon {
+            width: 44px;
+            height: 44px;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 12px;
+
+            font-size: 20px;
+
+            background:
+                rgba(14,165,233,0.08);
+
+            border:
+                1px solid
+                rgba(14,165,233,0.12);
+
+            margin-bottom: 16px;
+        }
+
+        .feature h3 {
+            font-size: 15px;
+
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            color: #64748b;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+        }
+
+
+        /* =========================================================
+           FOOTER
+        ========================================================= */
+
+        footer {
+            padding:
+                25px;
+
+            text-align: center;
+
+            color: #475569;
+
+            font-size: 11px;
+
+            border-top:
+                1px solid
+                rgba(255,255,255,0.06);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .hero {
+                grid-template-columns: 1fr;
+
+                gap: 50px;
+
+                padding-top: 65px;
+            }
+
+            .hero-content {
+                text-align: center;
+
+                margin: auto;
+            }
+
+            .hero-description {
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .buttons {
+                justify-content: center;
+            }
+
+            .preview-wrapper {
+                max-width: 550px;
+
+                width: 100%;
+
+                margin: auto;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 550px) {
+
+            .navbar-inner {
+                padding:
+                    13px 15px;
+            }
+
+            .system-status {
+                display: none;
+            }
+
+            .hero {
+                padding:
+                    55px 17px 45px;
+            }
+
+            .hero h1 {
+                letter-spacing: -2px;
+            }
+
+            .hero-description {
+                font-size: 15px;
+            }
+
+            .features {
+                padding:
+                    25px 17px 60px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard {
+                padding: 14px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <!-- =========================================================
+         NAVBAR
+    ========================================================= -->
+
+    <header class="navbar">
+
+        <div class="navbar-inner">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    🛺
+                </div>
+
+                <div>
+
+                    <div class="brand-name">
+                        RFID Rickshaw
+                    </div>
+
+                    <div class="brand-subtitle">
+                        Smart Management Platform
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="system-status">
+
+                <span class="system-dot"></span>
+
+                System Online
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         HERO
+    ========================================================= -->
+
+    <main>
+
+        <section class="hero">
+
+
+            <div class="hero-content">
+
+                <div class="eyebrow">
+
+                    <span class="eyebrow-dot"></span>
+
+                    SMART TRANSPORTATION SYSTEM
+
+                </div>
+
+
+                <h1>
+
+                    Smarter
+
+                    <span class="gradient-text">
+                        Rickshaw
+                    </span>
+
+                    Management
+
+                </h1>
+
+
+                <p class="hero-description">
+
+                    A secure RFID-powered platform for
+                    managing registered rickshaws, owners,
+                    pullers and live operational status.
+                    Scan a vehicle QR code and instantly
+                    access verified information.
+
+                </p>
+
+
+                <div class="buttons">
+
+                    <a
+                        href="rickshaw.html"
+                        class="button primary-button"
+                    >
+
+                        View Rickshaw Status
+
+                        <span>→</span>
+
+                    </a>
+
+
+                    <a
+                        href="#features"
+                        class="button secondary-button"
+                    >
+
+                        Explore Platform
+
+                        <span>↓</span>
+
+                    </a>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 LIVE PREVIEW
+            ================================================== -->
+
+            <div class="preview-wrapper">
+
+                <div class="preview-glow"></div>
+
+
+                <div class="dashboard">
+
+                    <div class="dashboard-header">
+
+                        <div class="dashboard-title">
+                            Live Vehicle Overview
+                        </div>
+
+                        <div class="live-label">
+
+                            <span class="live-dot"></span>
+
+                            Live
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="vehicle">
+
+                        <div class="vehicle-header">
+
+                            <div class="vehicle-icon">
+                                🛺
+                            </div>
+
+                            <div class="vehicle-main">
+
+                                <span class="vehicle-label">
+                                    RICKSHAW NUMBER
+                                </span>
+
+                                <div class="vehicle-number">
+                                    RFID-001
+                                </div>
+
+                            </div>
+
+                            <div class="active-badge">
+                                ACTIVE
+                            </div>
+
+                        </div>
+
+
+                        <div class="info-grid">
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    Owner
+                                </span>
+
+                                <span class="info-value">
+                                    Registered Owner
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    Puller
+                                </span>
+
+                                <span class="info-value">
+                                    Active Puller
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    Garage
+                                </span>
+
+                                <span class="info-value">
+                                    Registered Garage
+                                </span>
+
+                            </div>
+
+
+                            <div class="info-box">
+
+                                <span class="info-label">
+                                    RFID
+                                </span>
+
+                                <span class="info-value">
+                                    Verified
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="info-grid">
+
+                        <div class="info-box">
+
+                            <span class="info-label">
+                                Identification
+                            </span>
+
+                            <span class="info-value">
+                                RFID Secured
+                            </span>
+
+                        </div>
+
+
+                        <div class="info-box">
+
+                            <span class="info-label">
+                                QR Access
+                            </span>
+
+                            <span class="info-value">
+                                Instant
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             FEATURES
+        ====================================================== -->
+
+        <section
+            class="features"
+            id="features"
+        >
+
+            <div class="section-heading">
+
+                <h2>
+                    Complete Vehicle Visibility
+                </h2>
+
+                <p>
+                    One secure platform for your complete
+                    rickshaw registration system.
+                </p>
+
+            </div>
+
+
+            <div class="feature-grid">
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📡
+                    </div>
+
+                    <h3>
+                        RFID Identification
+                    </h3>
+
+                    <p>
+                        Master and slave RFID identification
+                        provides controlled registration of
+                        rickshaw owners and pullers.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📱
+                    </div>
+
+                    <h3>
+                        QR Vehicle Access
+                    </h3>
+
+                    <p>
+                        Scan the QR code attached to a rickshaw
+                        to open its live verified information
+                        from any smartphone.
+                    </p>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        ⚡
+                    </div>
+
+                    <h3>
+                        Real-Time Monitoring
+                    </h3>
+
+                    <p>
+                        Firebase real-time synchronization keeps
+                        vehicle status, puller information and
+                        session data continuously updated.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+
+        RFID Rickshaw Management System
+
+        <br>
+
+        Smart Identification • Live Status • Secure Records
+
+    </footer>
+
+
+</body>
+
+</html>

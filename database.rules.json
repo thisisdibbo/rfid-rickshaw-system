@@ -1,0 +1,104 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "mobile_access": {
+      "$uid": {
+        ".read": "auth != null && auth.uid === $uid",
+        ".write": false
+      }
+    },
+    "access": {
+      ".read": false,
+      ".write": false
+    },
+    "indexes": {
+      "master_cards": {
+        "$cardKey": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && data.child('owner_id').val() === root.child('mobile_access').child(auth.uid).child('owner_id').val()",
+          ".write": false
+        }
+      },
+      "slave_cards": {
+        "$cardKey": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true",
+          ".write": false
+        }
+      }
+    },
+    "master": {
+      "owners": {
+        ".read": false,
+        ".write": false
+      },
+      "pullers": {
+        ".read": false,
+        ".write": false
+      },
+      "rickshaws": {
+        ".indexOn": [
+          "owner_id"
+        ],
+        ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && query.orderByChild === 'owner_id' && query.equalTo === root.child('mobile_access').child(auth.uid).child('owner_id').val()",
+        "$rid": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($rid).val() === true",
+          ".write": false
+        }
+      }
+    },
+    "live": {
+      "active_sessions": {
+        ".indexOn": [
+          "owner_id"
+        ],
+        ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && query.orderByChild === 'owner_id' && query.equalTo === root.child('mobile_access').child(auth.uid).child('owner_id').val()",
+        "$rid": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($rid).val() === true",
+          ".write": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($rid).val() === true && ((!data.exists() && newData.exists() && newData.child('status').val() === 'ACTIVE' && newData.child('source').val() === 'MOBILE' && newData.child('mobile_uid').val() === auth.uid && newData.child('owner_id').val() === root.child('mobile_access').child(auth.uid).child('owner_id').val() && newData.child('owner_id_key').val() === root.child('mobile_access').child(auth.uid).child('owner_id_key').val() && newData.child('rickshaw_id_key').val() === $rid && newData.child('rickshaw_id').val() === root.child('master').child('rickshaws').child($rid).child('db_id').val() && newData.child('master_uid').val() === root.child('master').child('owners').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child('master_uid').val() && newData.child('puller_id').val() === root.child('master').child('pullers').child(newData.child('puller_id_key').val()).child('db_id').val() && newData.child('slave_uid').val() === root.child('master').child('pullers').child(newData.child('puller_id_key').val()).child('slave_uid').val()) || (data.exists() && !newData.exists() && data.child('owner_id').val() === root.child('mobile_access').child(auth.uid).child('owner_id').val()))"
+        }
+      },
+      "rickshaws": {
+        "$rid": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($rid).val() === true",
+          ".write": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($rid).val() === true && newData.exists() && newData.child('db_id').val() === data.child('db_id').val() && newData.child('rickshaw_number').val() === data.child('rickshaw_number').val() && newData.child('registration_number').val() === data.child('registration_number').val() && newData.child('garage_name').val() === data.child('garage_name').val() && newData.child('garage_location').val() === data.child('garage_location').val() && newData.child('owner_id').val() === data.child('owner_id').val() && newData.child('owner_name').val() === data.child('owner_name').val() && newData.child('owner_code').val() === data.child('owner_code').val() && newData.child('owner_phone').val() === data.child('owner_phone').val() && newData.child('qr_token').val() === data.child('qr_token').val() && newData.child('active').val() === data.child('active').val()",
+          "status": {
+            ".validate": "newData.val() === 'ACTIVE' || newData.val() === 'IDLE'"
+          }
+        }
+      }
+    },
+    "history": {
+      "sessions": {
+        "$sessionId": {
+          ".read": false,
+          ".write": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && newData.exists() && newData.child('cloud_session_id').val() === $sessionId && newData.child('source').val() === 'MOBILE' && newData.child('mobile_uid').val() === auth.uid && newData.child('owner_id').val() === root.child('mobile_access').child(auth.uid).child('owner_id').val() && root.child('access').child('owner_rickshaws').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child(newData.child('rickshaw_id_key').val()).val() === true && (!data.exists() || data.child('mobile_uid').val() === auth.uid)"
+        }
+      }
+    },
+    "public": {
+      "by_token": {
+        "$token": {
+          ".read": true,
+          ".write": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('access').child('owner_tokens').child(root.child('mobile_access').child(auth.uid).child('owner_id_key').val()).child($token).val() === true && newData.exists() && newData.child('rickshaw_id').val() === data.child('rickshaw_id').val() && newData.child('rickshaw_number').val() === data.child('rickshaw_number').val() && newData.child('registration_number').val() === data.child('registration_number').val() && newData.child('garage_name').val() === data.child('garage_name').val() && newData.child('garage_location').val() === data.child('garage_location').val() && newData.child('owner_name').val() === data.child('owner_name').val()",
+          "status": {
+            ".validate": "newData.val() === 'ACTIVE' || newData.val() === 'IDLE'"
+          }
+        }
+      }
+    },
+    "mobile": {
+      "owners": {
+        "$ownerId": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && root.child('mobile_access').child(auth.uid).child('owner_id_key').val() === $ownerId",
+          ".write": false
+        }
+      },
+      "pullers": {
+        "$pullerId": {
+          ".read": "auth != null && root.child('mobile_access').child(auth.uid).child('active').val() === true && data.child('active').val() === true",
+          ".write": false
+        }
+      }
+    }
+  }
+}

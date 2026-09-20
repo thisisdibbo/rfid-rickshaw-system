@@ -1,0 +1,40 @@
+# ---- Secrets ----
+credentials/
+*firebase-adminsdk*.json
+google-services.json
+GoogleService-Info.plist
+
+# ---- Local config / data ----
+settings.json
+*.db
+*.sqlite
+*.sqlite3
+photos/
+
+# ---- Keep these tracked (must come after the ignore rules) ----
+!firebase.json
+!database.rules.json
+!.firebaserc
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+build/
+dist/
+*.spec
+
+# ---- Flutter ----
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+**/build/
+*.apk
+*.aab
+
+# ---- Editor / OS ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
