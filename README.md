@@ -164,7 +164,6 @@ Sessions end in four ways: the owner presses **END** on the desktop, the owner e
 
 ## 📸 Screenshots
 
-> **Add your own images to `docs/screenshots/` using the file names below and they will appear here automatically.**
 
 ### 🖥️ Desktop App (PySide6)
 
@@ -324,9 +323,7 @@ rfid-rickshaw-system/
 └── README.md
 ```
 
-> If your working copy is currently flat (all `.py` files in one folder), either keep it flat and simplify the paths above, or move them into `desktop/` — the imports are all relative to each other, so nothing breaks as long as the four Python files stay side by side.
 
----
 
 ## Getting started
 
@@ -380,9 +377,6 @@ rfid-rickshaw-system/
 }
 ```
 
-> The Admin SDK on the desktop bypasses these rules entirely — they exist to constrain the **mobile app** and the **public page**. Tighten them to match your deployment before going live.
-
----
 
 ### 2️⃣ Desktop app
 
@@ -524,7 +518,6 @@ dist/
 build/
 ```
 
-> ⚠️ **If you have already pushed a service-account key or committed one in an earlier commit, rotate it.** Go to *Firebase Console → Project settings → Service accounts*, delete the exposed key and generate a new one. Deleting the file in a later commit does **not** remove it from git history.
 
 Design decisions already in place:
 
