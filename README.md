@@ -486,7 +486,7 @@ firebase deploy --only hosting
 QR links then point at:
 
 ```
-https://<your-project>.web.app/rickshaw.html?token=<qr_token>
+https://rfid-rickshaw-system.web.app/rickshaw.html?token=<qr_token>
 ```
 
 Update `QR_BASE_URL` in `main.py` to match your hosting domain.
@@ -619,7 +619,8 @@ Released under the MIT License. See [`LICENSE`](LICENSE).
 
 ## 👤 Author
 
-**\<Your Name\>** — [@\<your-username\>](https://github.com/<your-username>)
+**\<Md. Mahin Rahman\>** — [@\<thisisdibbo\>](https://github.com/<thisisdibbo>)
+[mr.d2003feb@gmail.com](mailto:mr.d2003feb@gmail.com)
 
 Built as a full-stack IoT + cloud project: RFID hardware, desktop administration, mobile app, realtime database and a public verification page.
 
