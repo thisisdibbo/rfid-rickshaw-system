@@ -16,19 +16,20 @@ Anyone can scan the QR sticker on a rickshaw and instantly see **who is pulling 
 
 ## 📑 Table of Contents
 
-- [Why this project exists](#-why-this-project-exists)
-- [How the system works](#-how-the-system-works)
-- [Architecture](#-architecture)
-- [The RFID scan flow](#-the-rfid-scan-flow)
+- [Why this project exists](#why-this-project-exists)
+- [How the system works](#how-the-system-works)
+- [Architecture](#architecture)
+- [The RFID scan flow](#the-rfid-scan-flow)
 - [Screenshots](#-screenshots)
-- [Components](#-components)
-- [Firebase data model](#-firebase-data-model)
+- [Components](#components)
+- [Firebase data model](#firebase-data-model)
+- [Google Sheets log](#-google-sheets-log)
 - [Repository structure](#-repository-structure)
-- [Getting started](#-getting-started)
+- [Getting started](#getting-started)
 - [Configuration](#-configuration)
 - [Security](#-security)
-- [Engineering notes](#-engineering-notes)
-- [Troubleshooting](#-troubleshooting)
+- [Engineering notes](#engineering-notes)
+- [Troubleshooting](#troubleshooting)
 - [Roadmap](#-roadmap)
 - [License](#-license)
 
@@ -219,7 +220,7 @@ The admin and garage terminal. This is where all master data is entered.
 
 ### ☁️ Cloud Layer — `firebase_service.py`
 
-Everything that touches Firebase, isolated in one module: master-data sync, atomic session start/end, the live listener, photo encoding, owner mobile-account management, and connectivity probes. See [Engineering notes](#-engineering-notes) for the reliability design.
+Everything that touches Firebase, isolated in one module: master-data sync, atomic session start/end, the live listener, photo encoding, owner mobile-account management, and connectivity probes. See [Engineering notes](#engineering-notes) for the reliability design.
 
 ### 🌐 Public QR Server — `qr_server.py` (Flask)
 
@@ -283,6 +284,21 @@ rfid-rickshaw-system-default-rtdb
 ```
 
 **Why the `access/` and `public/` split matters:** the public page only ever reads `public/by_token/<token>`, which contains no phone numbers of owners, no RFID UIDs and no master data. The owner's phone can only write to rickshaws listed under its own `access/owner_rickshaws` entry. Neither can browse the master tree.
+
+---
+
+## 📊 Google Sheets log
+
+Every session is also appended to a Google Sheet, giving the garage a permanent, human-readable record outside Firebase — one that anyone in the office can open, filter, sort or print without installing anything.
+
+![Google Sheet event log](docs/screenshots/google-sheet.png)
+
+How it is wired:
+
+- **The mobile app does the writing.** `google_sheet_service.dart` posts each session event to a Google Apps Script web app, which appends the row. The desktop deliberately does *not* write to the sheet — `log_event()` only updates Firebase and the dashboard — so the same event can never be logged twice from two devices.
+- **The Apps Script URL lives in Firebase**, at `settings/google_sheet/api_url`. Set it once on the desktop Settings page and every phone picks it up automatically. Changing the endpoint needs no rebuild and no reinstall.
+- **Settings → TEST CONNECTION** pings the script before saving it, and the `● Google: Synced / Uploading / Failed` indicator in the top status bar reports the last result.
+- The sidebar button **▤ Open Google Sheet** opens the sheet in a browser straight from the desktop app.
 
 ---
 
@@ -478,6 +494,7 @@ Update `QR_BASE_URL` in `main.py` to match your hosting domain.
 | Session timeout | Settings page → `settings.json` | 3600 s (toggleable / unlimited) |
 | Popup display time | Settings page → `settings.json` | 2 s |
 | Google Apps Script URL | Settings page → also pushed to `settings/google_sheet/api_url` | project default |
+| Google Sheet view URL | `DEFAULT_SHEET_URL` / `open_google_sheet()` in `main.py` | the project's event-log sheet |
 | QR base URL | `QR_BASE_URL` in `main.py` | `https://rfid-rickshaw-system.web.app/rickshaw.html?token=` |
 | Database URL | `DATABASE_URL` in `firebase_service.py` | project RTDB |
 | Firebase HTTP timeout | `FIREBASE_HTTP_TIMEOUT` in `firebase_service.py` | 20 s |
@@ -594,7 +611,7 @@ Released under the MIT License. See [`LICENSE`](LICENSE).
 
 ## 👤 Author
 
-**\<Md. Mahin Rahman\>** — [@\<thisisdibbo\>](https://github.com/<thisisdibbo>) [mr.d2003feb@gmail.com](mailto:mr.d2003feb@gmail.com)
+**Md. Mahin Rahman** — [@thisisdibbo](https://github.com/thisisdibbo) · [mr.d2003feb@gmail.com](mailto:mr.d2003feb@gmail.com)
 
 Built as a full-stack IoT + cloud project: RFID hardware, desktop administration, mobile app, realtime database and a public verification page.
 
